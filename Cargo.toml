@@ -1,0 +1,24 @@
+[package]
+name = "aoc2021"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[workspace]
+
+[dependencies]
+criterion = "*"
+
+[dependencies.day01]
+path = "day01"
+
+[dependencies.day02]
+path = "day02"
+
+[dependencies.common]
+path = "common"
+
+[[bench]]
+name = "advent-2021"
+harness = false

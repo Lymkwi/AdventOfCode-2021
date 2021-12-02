@@ -1,7 +1,9 @@
-//! This crates contains the code necessary to solve Advent of Code day 01,
+//! This crate contains the code necessary to solve Advent of Code day 02,
 //! all written in Rust.
+
 extern crate common;
 use common::read_data;
+
 mod lib;
 use lib::*;
 
@@ -13,18 +15,18 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     Ok(())
 }
 
-
 #[cfg(test)]
 mod test {
     use super::*;
 
     #[test]
-    fn day01_01_example1() {
-        assert_eq!(Ok(7), solve_part_one("199\n200\n208\n210\n200\n207\n240\n269\n260\n263\n"));
+    fn day02_01_example1() {
+        assert_eq!(Ok(150), solve_part_one("forward 5\ndown 5\nforward 8\nup 3\ndown 8\nforward 2"));
     }
 
     #[test]
-    fn day01_02_example1() {
-        assert_eq!(Ok(5), solve_part_two("199\n200\n208\n210\n200\n207\n240\n269\n260\n263\n"));
+    fn day02_02_example1() {
+        assert_eq!(Ok(900), solve_part_two("forward 5\ndown 5\nforward 8\nup 3\ndown 8\nforward 2"));
     }
+
 }
