@@ -7,19 +7,20 @@
 ///
 /// # Return value
 ///
-/// This function returns a `Result<usize,()>` where `Ok` holds the result for part
-/// one of advent of code day 01.
+/// This function returns a `usize`, solution for part one of advent of code
+/// day 02.
 ///
-/// # Errors
+/// # Panics
 ///
-/// There is no custom error type here so `Err` always contains `()`.
-pub fn solve_part_one(data: &str) -> Result<usize,()> {
+/// If any conversion assumed to be valid with the input fails, panics.
+#[must_use]
+pub fn solve_part_one(data: &str) -> usize {
     // Build the data into a Vec<i32>
     let coords = data.trim().split('\n')
        .map(|v| {
            let toks = v.split(' ').collect::<Vec<&str>>();
            let delta: i32 = toks[1].parse::<i32>().unwrap();
-           match toks.get(0).map(|&v| v) {
+           match toks.get(0).copied() {
                Some("forward") => (0, delta),
                Some("down") => (delta, 0),
                Some("up") => (-delta, 0),
@@ -28,10 +29,10 @@ pub fn solve_part_one(data: &str) -> Result<usize,()> {
            }
        })
        .fold((0, 0), |d, i| (d.0 + i.0, d.1 + i.1));
-    (coords.0 * coords.1).try_into().map_err(|_| ())
+    (coords.0 * coords.1).try_into().unwrap()
 }
 
-/// Solve Advent of Code day 01 part two
+/// Solve Advent of Code day 02 part two
 ///
 /// # Arguments
 ///
@@ -40,18 +41,19 @@ pub fn solve_part_one(data: &str) -> Result<usize,()> {
 ///
 /// # Return value
 ///
-/// This function returns a `Result<usize,()>` where `Ok` holds the result for part
-/// two of advent of code day 01.
+/// This function returns a `usize`, the result for part two of advent of
+/// code day 02.
 ///
-/// # Errors
+/// # Panics
 ///
-/// There is no custom error type here so `Err` always contains `()`.
-pub fn solve_part_two(data: &str) -> Result<usize,()> {
-    match data.trim().split('\n')
+/// If any operation assumed to be valid with the input fails, panics.
+#[must_use]
+pub fn solve_part_two(data: &str) -> usize {
+    let (_, x, y) = data.trim().split('\n')
        .map(|v| {
            let toks = v.split(' ').collect::<Vec<&str>>();
            let delta: i32 = toks[1].parse::<i32>().unwrap();
-           match toks.get(0).map(|&v| v) {
+           match toks.get(0).copied() {
                Some("forward") => (0, delta),
                Some("down") => (delta, 0),
                Some("up") => (-delta, 0),
@@ -68,8 +70,7 @@ pub fn solve_part_two(data: &str) -> Result<usize,()> {
                (0, x) => (data.0, data.1+x, data.2+x*data.0),
                _ => panic!("Cannot happen")
            }
-       }) {
-           (_, x, y) => (x*y).try_into().map_err(|_| ())
-       }
+       });
+    (x*y).try_into().unwrap()
 }
 

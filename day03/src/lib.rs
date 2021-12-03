@@ -1,5 +1,20 @@
 //! Module containing the logic used to solve advent of code day 03
 
+/// Solve Advent of Code day 03 part one
+///
+/// # Arguments
+///
+///  - `data` : a `&str` that holds both numbers for today's input.
+///
+/// # Return value
+///
+/// This function returns a `usize`, solution for part one of advent of code
+/// day 03.
+///
+/// # Panics
+///
+/// If any conversion assumed to be valid with the input fails, panics.
+#[must_use]
 pub fn solve_part_one(data: &str) -> usize {
     // Build a vec of vecs of ints to get our bits
     // into order
@@ -35,6 +50,21 @@ pub fn solve_part_one(data: &str) -> usize {
     gamma * epsilon
 }
 
+/// Solve Advent of Code day 03 part two
+///
+/// # Arguments
+///
+///  - `data` : a `&str` that holds both numbers for today's input.
+///
+/// # Return value
+///
+/// This function returns a `usize`, solution for part two of advent of code
+/// day 03.
+///
+/// # Panics
+///
+/// If any conversion assumed to be valid with the input fails, panics.
+#[must_use]
 pub fn solve_part_two(data: &str) -> usize {
     // Build a vec of vecs of ints
     // It's much easier to do bit inspection later
@@ -51,11 +81,10 @@ pub fn solve_part_two(data: &str) -> usize {
     generator * scrubber
 }
 
-fn get_common(data: &Vec<Vec<usize>>, pos: usize) -> usize {
-    let mid: f64 = (data.len() as f64)/2_f64;
+fn get_common(data: &[Vec<usize>], pos: usize) -> usize {
     if data.iter()
-        .map(|x| *x.get(pos).unwrap() as f64)
-        .sum::<f64>() >= mid
+        .map(|x| *x.get(pos).unwrap())
+        .sum::<usize>() * 2 >= data.len()
         {
             1
         } else {
@@ -63,9 +92,9 @@ fn get_common(data: &Vec<Vec<usize>>, pos: usize) -> usize {
         }
 }
 
-fn get_number(data: &Vec<Vec<usize>>, is_generator: bool) -> usize {
+fn get_number(data: &[Vec<usize>], is_generator: bool) -> usize {
     let numsize = data.get(0).unwrap().len();
-    let mut potential = data.clone();
+    let mut potential = data.to_owned();
     for i in 0..numsize {
         let common = get_common(&potential, i);
         potential = potential.into_iter()

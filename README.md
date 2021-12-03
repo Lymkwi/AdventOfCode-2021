@@ -23,8 +23,8 @@ Stars obtained :
 Run times (on a ThinkPad X230 with Intel i7-3520M) :
 |        | Day 01 | Day 02 | Day 03 |
 |--------|--------|--------|--------|
-| Part 1 |   50us |  161us |  367us |
-| Part 2 |   55us |  160us |  488us |
+| Part 1 |   50us |  161us |  294us |
+| Part 2 |   55us |  160us |  433us |
 
 In order to check those benchmarks, run `cargo bench` on the root crate.
 
