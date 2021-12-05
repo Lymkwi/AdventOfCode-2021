@@ -13,7 +13,7 @@ This code in organized with :
 
 Stars obtained :
 ```
-⭐⭐⭐⭐⭐⭐⚫⚫⚫⚫
+⭐⭐⭐⭐⭐⭐⭐⭐⚫⚫
 ⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫
 ⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫
 ⚫⚫⚫⚫⚫⚫⚫⚫⚫⚫
@@ -21,10 +21,10 @@ Stars obtained :
 ```
 
 Run times (on a ThinkPad X230 with Intel i7-3520M) :
-|        | Day 01 | Day 02 | Day 03 |
-|--------|--------|--------|--------|
-| Part 1 |   50us |  161us |  294us |
-| Part 2 |   55us |  160us |  433us |
+|        | Day 01 | Day 02 | Day 03 | Day 04 | Day 05 |
+|--------|--------|--------|--------|--------|--------|
+| Part 1 |   50us |  161us |  294us |   --   |   11ms |
+| Part 2 |   55us |  160us |  433us |   --   |   22ms |
 
 In order to check those benchmarks, run `cargo bench` on the root crate.
 

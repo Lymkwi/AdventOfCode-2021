@@ -3,6 +3,7 @@ extern crate criterion;
 extern crate day01;
 extern crate day02;
 extern crate day03;
+extern crate day05;
 
 fn main() {
     println!("Use `cargo bench` or `cargo test`.");
@@ -45,5 +46,17 @@ mod test {
     fn day03_two() {
         assert_eq!(1613181,
                    day03::solve_part_two(&read_data("day03/input").unwrap()));
+    }
+
+    #[test]
+    fn day05_one() {
+        assert_eq!(7269,
+                   day05::solve_part_one(&read_data("day05/input").unwrap()));
+    }
+
+    #[test]
+    fn day05_two() {
+        assert_eq!(21140,
+                   day05::solve_part_two(&read_data("day05/input").unwrap()));
     }
 }
