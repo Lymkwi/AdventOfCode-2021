@@ -3,6 +3,7 @@ extern crate criterion;
 extern crate day01;
 extern crate day02;
 extern crate day03;
+extern crate day04;
 extern crate day05;
 
 fn main() {
@@ -46,6 +47,18 @@ mod test {
     fn day03_two() {
         assert_eq!(1613181,
                    day03::solve_part_two(&read_data("day03/input").unwrap()));
+    }
+
+    #[test]
+    fn day04_one() {
+        assert_eq!(7269,
+                   day04::solve_part_one(&read_data("day04/input").unwrap()));
+    }
+
+    #[test]
+    fn day04_two() {
+        assert_eq!(21140,
+                   day04::solve_part_two(&read_data("day04/input").unwrap()));
     }
 
     #[test]

@@ -7,6 +7,10 @@ edition = "2021"
 
 [workspace]
 
+[[bench]]
+name = "advent-2021"
+harness = false
+
 [dependencies]
 criterion = "*"
 
@@ -19,12 +23,14 @@ path = "day02"
 [dependencies.day03]
 path = "day03"
 
+[dependencies.day04]
+path = "day04"
+
 [dependencies.day05]
 path = "day05"
 
 [dependencies.common]
 path = "common"
 
-[[bench]]
-name = "advent-2021"
-harness = false
+[dependencies.day06]
+path="day06/"
