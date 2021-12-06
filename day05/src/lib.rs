@@ -21,18 +21,18 @@ pub fn solve_part_one(data: &str) -> usize {
     // Parse the data and build the line list
     for line in data.trim().split('\n') {
         let ends = line.split(" -> ").collect::<Vec<&str>>();
-        let scoords = ends.get(0).unwrap()
+        let stop_coords = ends.get(0).unwrap()
             .split(',')
             .map(|x| x.parse::<usize>().unwrap())
             .collect::<Vec<usize>>();
-        let sx = *scoords.get(0).unwrap();
-        let sy = *scoords.get(1).unwrap();
-        let ecoords = ends.get(1).unwrap()
+        let sx = *stop_coords.get(0).unwrap();
+        let sy = *stop_coords.get(1).unwrap();
+        let end_coords = ends.get(1).unwrap()
             .split(',')
             .map(|x| x.parse::<usize>().unwrap())
             .collect::<Vec<usize>>();
-        let ex = *ecoords.get(0).unwrap();
-        let ey = *ecoords.get(1).unwrap();
+        let ex = *end_coords.get(0).unwrap();
+        let ey = *end_coords.get(1).unwrap();
         if sx == ex {
             // It's a line in the y direction
             let mn = std::cmp::min(sy, ey);
@@ -67,18 +67,18 @@ pub fn solve_part_two(data: &str) -> usize {
     // Parse the data and build the line list
     for line in data.trim().split('\n') {
         let ends = line.split(" -> ").collect::<Vec<&str>>();
-        let scoords = ends.get(0).unwrap()
+        let stop_coords = ends.get(0).unwrap()
             .split(',')
             .map(|x| x.parse::<usize>().unwrap())
             .collect::<Vec<usize>>();
-        let sx = *scoords.get(0).unwrap();
-        let sy = *scoords.get(1).unwrap();
-        let ecoords = ends.get(1).unwrap()
+        let sx = *stop_coords.get(0).unwrap();
+        let sy = *stop_coords.get(1).unwrap();
+        let end_coords = ends.get(1).unwrap()
             .split(',')
             .map(|x| x.parse::<usize>().unwrap())
             .collect::<Vec<usize>>();
-        let ex = *ecoords.get(0).unwrap();
-        let ey = *ecoords.get(1).unwrap();
+        let ex = *end_coords.get(0).unwrap();
+        let ey = *end_coords.get(1).unwrap();
         if sx == ex {
             // It's a line in the y direction
             let mn = std::cmp::min(sy, ey);
@@ -89,20 +89,20 @@ pub fn solve_part_two(data: &str) -> usize {
             let ma = sx + ex - mn;
             (mn..=ma).for_each(|x| *grid.entry((sy,x)).or_insert(0) += 1);
         } else if chdif(ex, sx) == chdif(ey ,sy) {
-            let minx = std::cmp::min(ex, sx);
-            let miny = std::cmp::min(ey, sy);
+            let min_x = std::cmp::min(ex, sx);
+            let min_y = std::cmp::min(ey, sy);
             if (ex > sx && ey > sy) || (sy > ey && sx > ex) {
                 (0..=chdif(ex, sx)).for_each(|d| {
-                    *grid.entry((miny+d, minx+d)).or_insert(0) += 1;
-                })
-            } else if (ex > sx && sy > ey) {
+                    *grid.entry((min_y+d, min_x+d)).or_insert(0) += 1;
+                });
+            } else if ex > sx && sy > ey {
                 (0..=chdif(ex, sx)).for_each(|d| {
                     *grid.entry((sy-d, sx+d)).or_insert(0) += 1;
-                })
+                });
             } else {
                 (0..=chdif(ex, sx)).for_each(|d| {
                     *grid.entry((sy+d, sx-d)).or_insert(0) += 1;
-                })
+                });
             }
         }
     }

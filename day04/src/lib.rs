@@ -30,7 +30,6 @@ pub fn solve_part_one(data: &str) -> usize {
         for b in &mut boards {
             if b.play(i) {
                 // Congrats!
-                println!("{} * {}", i, b.sum_empty(&numbies[..=p]));
                 return b.sum_empty(&numbies[..=p]) * i
             }
         }
@@ -52,23 +51,21 @@ impl Board {
     }
     fn play(&mut self, n: usize) -> bool {
         self.data.contains_key(&n) &&
-            match self.data.get(&n).unwrap() {
-                (x, y) => {
-                    self.ysum[*y] += 1;
-                    self.xsum[*x] += 1;
-                    self.ysum[*y] == 5 || self.xsum[*x] == 5
-                }
+            {
+                let (x,y) = self.data.get(&n).unwrap();
+                self.ysum[*y] += 1;
+                self.xsum[*x] += 1;
+                self.ysum[*y] == 5 || self.xsum[*x] == 5
             }
     }
     fn from_str(init: &str) -> Board {
-        let nums = init.clone().split('\n')
+        let nums = init.split('\n')
             .enumerate() // gives the y number
-            .map(move |(y, d)| d.trim().replace("  ", " ").split(' ')
+            .flat_map(move |(y, d)| d.trim().replace("  ", " ").split(' ')
                  .enumerate()
                  .map(move |(x, s)| (s.parse::<usize>().unwrap(), (y, x)))
                  .collect::<Vec<(usize, (usize, usize))>>()
             )
-            .flatten()
             .collect::<HashMap<usize, (usize, usize)>>();
         Board {
             ysum: [0, 0, 0, 0, 0],
@@ -106,23 +103,20 @@ pub fn solve_part_two(data: &str) -> usize {
     for (p, &i) in numbies.iter().enumerate() {
         let mut rems: Vec<usize> = vec![];
         for s in 0..bsize {
-            println!("{} {}", bsize, s);
             let b: &mut Board = boards.get_mut(s).unwrap();
             if b.play(i) {
                 if bsize == 1 {
                     // Congrats!
-                    println!("{} * {}", i, b.sum_empty(&numbies[..=p]));
                     return b.sum_empty(&numbies[..=p]) * i
-                } else {
-                    rems.push(s);
                 }
+                rems.push(s);
             }
         }
-        rems.sort();
+        rems.sort_unstable();
         rems.iter().rev().for_each(|&x| {
             bsize -= 1;
             boards.remove(x);
-        })
+        });
     }
     0
 }

@@ -25,19 +25,16 @@ pub fn solve_part_one(data: &str) -> usize {
 
 fn check_depth(data: usize, rem: usize,
                cache: &mut HashMap<(usize, usize), usize>) -> usize {
-    if rem == 0 { 1 } else {
-        match cache.get(&(data, rem)) {
-            Some(&v) => v,
-            None => {
-                let u = match data {
-                    0 => check_depth(6, rem-1, cache)
-                        + check_depth(8, rem-1, cache),
-                    v => check_depth(v-1, rem-1, cache)
-                };
-                cache.insert((data, rem), u);
-                u
-            }
-        }
+    if rem == 0 { 1 }
+    else if let Some(&v) = cache.get(&(data, rem)) { v }
+    else {
+        let u = match data {
+            0 => check_depth(6, rem-1, cache)
+                + check_depth(8, rem-1, cache),
+            v => check_depth(v-1, rem-1, cache)
+        };
+        cache.insert((data, rem), u);
+        u
     }
 }
 
