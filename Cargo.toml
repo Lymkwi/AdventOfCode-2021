@@ -34,3 +34,6 @@ path = "common"
 
 [dependencies.day06]
 path="day06/"
+
+[dependencies.day07]
+path = "day07"

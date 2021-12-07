@@ -84,4 +84,16 @@ mod test {
         assert_eq!(1702631502303,
                    day06::solve_part_two(&read_data("day06/input").unwrap()));
     }
+
+    #[test]
+    fn day07_one() {
+        assert_eq!(352331,
+                   day07::solve_part_one(&read_data("day07/input").unwrap()));
+    }
+
+    #[test]
+    fn day07_two() {
+        assert_eq!(99266250,
+                   day07::solve_part_two(&read_data("day07/input").unwrap()));
+    }
 }
