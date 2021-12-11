@@ -18,11 +18,23 @@ use std::collections::HashMap;
 /// If any conversion assumed to be valid with the input fails, panics.
 #[must_use]
 pub fn solve_part_one(data: &str) -> usize {
+    // It'd technically be faster to use a grid here but they're a pain
+    // in Rust
     let mut grid: HashMap<(usize, usize), usize> = build_grid(data);
     (0..100).map(|_| step_grid(&mut grid))
         .sum::<usize>()
 }
 
+/// Processes one step in the grid
+///
+/// # Arguments
+///
+///  - `grid` : a `HashMap` where keys are tuples of `usize` and the values
+///  `usize`. That dictionary contains the grid data.
+///
+/// # Return value
+///
+/// This function returns the number of octopi that flashed during the step.
 fn step_grid(grid: &mut HashMap<(usize, usize), usize>) -> usize {
     // First, increase all by one
     grid.iter_mut()
@@ -34,26 +46,31 @@ fn step_grid(grid: &mut HashMap<(usize, usize), usize>) -> usize {
             .filter(|(_, &v)| v > 9 && v < 10000)
             .map(|(&k, _)| k).collect::<Vec<(usize, usize)>>();
         // Increase all of these to 10000
-        pos.iter().for_each(|k| *grid.get_mut(&k).unwrap() = 10000);
+        pos.iter().for_each(|k| *grid.get_mut(k).unwrap() = 10000);
         // Compute flashes
-        pos.iter().for_each(|&(y, x)| {
+        for (y, x) in pos {
             // Down neighbor
             if y < 9 { *grid.get_mut(&(y+1, x)).unwrap() += 1; }
             // Up neighbour
             if y > 0 { *grid.get_mut(&(y-1, x)).unwrap() += 1; }
-            // Right
-            if x < 9 { *grid.get_mut(&(y, x+1)).unwrap() += 1; }
+
             // Left
-            if x > 0 { *grid.get_mut(&(y, x-1)).unwrap() += 1; }
-            // Left Up
-            if x > 0 && y > 0 { *grid.get_mut(&(y-1, x-1)).unwrap() += 1; }
-            // Right Up
-            if x < 9 && y > 0 { *grid.get_mut(&(y-1, x+1)).unwrap() += 1; }
-            // Down left
-            if x > 0 && y < 9 { *grid.get_mut(&(y+1, x-1)).unwrap() += 1; }
-            // Down right
-            if x < 9 && y < 9 { *grid.get_mut(&(y+1, x+1)).unwrap() += 1; }
-        });
+            if x > 0 {
+                *grid.get_mut(&(y, x-1)).unwrap() += 1;
+                // Left Up
+                if y > 0 { *grid.get_mut(&(y-1, x-1)).unwrap() += 1; }
+                // Down Left
+                if y < 9 { *grid.get_mut(&(y+1, x-1)).unwrap() += 1; }
+            }
+            // Right
+            if x < 9 {
+                *grid.get_mut(&(y, x+1)).unwrap() += 1;
+                // Right Up
+                if y > 0 { *grid.get_mut(&(y-1, x+1)).unwrap() += 1; }
+                // Down Right
+                if y < 9 { *grid.get_mut(&(y+1, x+1)).unwrap() += 1; }
+            }
+        }
     }
     let res = grid.values().filter(|&x| *x >= 10000)
         .count();
@@ -63,6 +80,17 @@ fn step_grid(grid: &mut HashMap<(usize, usize), usize>) -> usize {
     res
 }
 
+/// Builds a grid from the formatted data
+///
+/// # Arguments
+///
+///  - `data` : a `&str` that contains the 10x10 grid of octopus energy levels.
+///
+/// # Return value
+///
+/// Returns a `HashMap` containing the grid of values, where the keys are the
+/// coordinates as a tuple of `usize`, and the values are the energy levels as
+/// `usize`.
 fn build_grid(data: &str) -> HashMap<(usize, usize), usize> {
     data.trim().split('\n')
         .enumerate()
