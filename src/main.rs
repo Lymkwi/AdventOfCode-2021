@@ -1,135 +1,41 @@
-extern crate common;
 extern crate criterion;
-extern crate day01;
-extern crate day02;
-extern crate day03;
-extern crate day04;
-extern crate day05;
 
 fn main() {
     println!("Use `cargo bench` or `cargo test`.");
 }
 
+
 #[cfg(test)]
 mod test {
+    macro_rules! result_tests {
+        ($daycrate:ident, $func_one:ident, $func_two:ident, $day:literal, $res1:literal, $res2:literal) => {
+            #[test]
+            fn $func_one() {
+                assert_eq!($res1,
+                    $daycrate::solve_part_one(
+                        &read_data(&format!("day{:02}/input", $day)).unwrap()))
+            }
+
+            #[test]
+            fn $func_two() {
+                assert_eq!($res2,
+                   $daycrate::solve_part_two(
+                        &read_data(&format!("day{:02}/input", $day)).unwrap()))
+            }
+        }
+    }
+
     use common::read_data;
-    #[test]
-    fn day01_one() {
-        assert_eq!(1759,
-            day01::solve_part_one(&read_data("day01/input").unwrap()))
-    }
 
-    #[test]
-    fn day01_two() {
-        assert_eq!(1805,
-            day01::solve_part_two(&read_data("day01/input").unwrap()))
-    }
-
-    #[test]
-    fn day02_one() {
-        assert_eq!(1480518,
-            day02::solve_part_one(&read_data("day02/input").unwrap()));
-    }
-
-    #[test]
-    fn day02_two() {
-        assert_eq!(1282809906,
-            day02::solve_part_two(&read_data("day02/input").unwrap()));
-    }
-
-    #[test]
-    fn day03_one() {
-        assert_eq!(3958484,
-                   day03::solve_part_one(&read_data("day03/input").unwrap()));
-    }
-
-    #[test]
-    fn day03_two() {
-        assert_eq!(1613181,
-                   day03::solve_part_two(&read_data("day03/input").unwrap()));
-    }
-
-    #[test]
-    fn day04_one() {
-        assert_eq!(27027,
-                   day04::solve_part_one(&read_data("day04/input").unwrap()));
-    }
-
-    #[test]
-    fn day04_two() {
-        assert_eq!(36975,
-                   day04::solve_part_two(&read_data("day04/input").unwrap()));
-    }
-
-    #[test]
-    fn day05_one() {
-        assert_eq!(7269,
-                   day05::solve_part_one(&read_data("day05/input").unwrap()));
-    }
-
-    #[test]
-    fn day05_two() {
-        assert_eq!(21140,
-                   day05::solve_part_two(&read_data("day05/input").unwrap()));
-    }
-
-    #[test]
-    fn day06_one() {
-        assert_eq!(379114,
-                   day06::solve_part_one(&read_data("day06/input").unwrap()));
-    }
-
-    #[test]
-    fn day06_two() {
-        assert_eq!(1702631502303,
-                   day06::solve_part_two(&read_data("day06/input").unwrap()));
-    }
-
-    #[test]
-    fn day07_one() {
-        assert_eq!(352331,
-                   day07::solve_part_one(&read_data("day07/input").unwrap()));
-    }
-
-    #[test]
-    fn day07_two() {
-        assert_eq!(99266250,
-                   day07::solve_part_two(&read_data("day07/input").unwrap()));
-    }
-
-    #[test]
-    fn day08_one() {
-        assert_eq!(416,
-                   day08::solve_part_one(&read_data("day08/input").unwrap()));
-    }
-
-    #[test]
-    fn day08_two() {
-        assert_eq!(1043697,
-                   day08::solve_part_two(&read_data("day08/input").unwrap()));
-    }
-
-    #[test]
-    fn day09_one() {
-        assert_eq!(572,
-                   day09::solve_part_one(&read_data("day09/input").unwrap()));
-    }
-
-    #[test]
-    fn day09_two() {
-        assert_eq!(847044,
-                   day09::solve_part_two(&read_data("day09/input").unwrap()));
-    }
-
-    #[test]
-    fn day10_one() {
-        assert_eq!(215229,
-                   day10::solve_part_one(&read_data("day10/input").unwrap()));
-    }
-
-    #[test]
-    fn day10_two() {
-        assert_eq!(1105996483,
-                   day10::solve_part_two(&read_data("day10/input").unwrap()));
-    }
+    result_tests!(day01, day01_one, day01_two, 01, 1759, 1805);
+    result_tests!(day02, day02_one, day02_two, 02, 1480518, 1282809906);
+    result_tests!(day03, day03_one, day03_two, 03, 3958484, 1613181);
+    result_tests!(day04, day04_one, day04_two, 04, 27027, 36975);
+    result_tests!(day05, day05_one, day05_two, 05, 7269, 21140);
+    result_tests!(day06, day06_one, day06_two, 06, 379114, 1702631502303);
+    result_tests!(day07, day07_one, day07_two, 07, 352331, 99266250);
+    result_tests!(day08, day08_one, day08_two, 08, 416, 1043697);
+    result_tests!(day09, day09_one, day09_two, 09, 572, 847044);
+    result_tests!(day10, day10_one, day10_two, 10, 215229, 1105996483);
+    result_tests!(day11, day11_one, day11_two, 11, 1585, 382);
 }

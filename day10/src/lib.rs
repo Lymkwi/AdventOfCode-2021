@@ -79,10 +79,7 @@ pub fn solve_part_two(data: &str) -> usize {
         }))
         .collect::<Vec<usize>>();
     res.sort_unstable();
-    return match res.len()%2 {
-        0 => *res.get(res.len()/2).unwrap(),
-        1 => *res.get(((res.len()+1)/2+(res.len()-1)/2)/2).unwrap(),
-        _ => unreachable!()
-    }
+    let s = res.len();
+    *res.get(((s+1)/2+(s-1)/2)/2).unwrap()
 }
 
