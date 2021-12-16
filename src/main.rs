@@ -41,4 +41,5 @@ mod test {
     result_tests!(day12, day12_one, day12_two, 12, 4720, 147848);
     result_tests!(day13, day13_one, day13_two, 13, 747, " ##  ###  #  # #### ###   ##  #  # #  #\n#  # #  # #  #    # #  # #  # #  # #  #\n#  # #  # ####   #  #  # #    #  # ####\n#### ###  #  #  #   ###  #    #  # #  #\n#  # # #  #  # #    #    #  # #  # #  #\n#  # #  # #  # #### #     ##   ##  #  #");
     result_tests!(day14, day14_one, day14_two, 14, 2587, 3318837563123);
+    result_tests!(day15, day15_one, day15_two, 15, 462, 2846);
 }
