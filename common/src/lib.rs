@@ -21,3 +21,27 @@ pub fn read_data(filepath: &str) -> std::io::Result<String> {
     file.read_to_string(&mut contents)?;
     Ok(contents.trim().to_string().replace("\r", ""))
 }
+
+#[macro_export]
+macro_rules! test {
+    ($fn:ident, $part:literal, $exp:literal, $data:literal) => {
+        #[test]
+        fn $fn() {
+            let data = $data;
+            // The expected definitions are in separate blocks
+            // So that the compiler can infer the right type from
+            // The right function without us having to tell it
+            match $part {
+                1 => {
+                    let expected = $exp;
+                    assert_eq!(expected, solve_part_one(&data))
+                },
+                2 => {
+                    let expected = $exp;
+                    assert_eq!(expected, solve_part_two(&data))
+                },
+                _ => panic!("Wrong day part '{}'", $part)
+            }
+        }
+    }
+}
