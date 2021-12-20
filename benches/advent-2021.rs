@@ -30,7 +30,7 @@ pub fn criterion_benchmark(c: &mut Criterion) {
 	day_tests!(16, c, day16);
 	day_tests!(17, c, day17);
 	day_tests!(18, c, day18);
-	//day_tests!(19, c, day19);
+	day_tests!(19, c, day19);
 	//day_tests!(20, c, day20);
 	//day_tests!(21, c, day21);
 	//day_tests!(22, c, day22);
