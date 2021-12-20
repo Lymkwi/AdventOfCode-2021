@@ -44,4 +44,5 @@ mod test {
     result_tests!(day15, day15_one, day15_two, 15, 462, 2846);
     result_tests!(day16, day16_one, day16_two, 16, 1002, 1673210814091);
     result_tests!(day17, day17_one, day17_two, 17, 5151, 968);
+    result_tests!(day18, dau18_one, dau18_two, 18, 3574, 4763);
 }
