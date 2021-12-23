@@ -1,7 +1,7 @@
 //! Library module with all the logic
-mod modification;
-mod cuboidunion;
-mod utils;
+pub mod modification;
+pub mod cuboidunion;
+pub mod utils;
 use modification::Modification;
 use cuboidunion::CuboidUnion;
 
@@ -22,7 +22,7 @@ use cuboidunion::CuboidUnion;
 #[must_use]
 pub fn solve_part_one(data: &str) -> usize {
     let rules: Vec<Modification> = data.trim().split('\n')
-        .map(|x| Modification::from_str(x))
+        .map(|x| x.parse::<Modification>().unwrap())
         .rev()
         .collect::<Vec<Modification>>();
     let mut res = 0;
@@ -61,7 +61,7 @@ pub fn solve_part_two(data: &str) -> usize {
     // They have to be in reverse order so that once a rule covers
     // An area it is considered to be defined by that rule
     let rules: Vec<Modification> = data.trim().split('\n')
-        .map(|x| Modification::from_str(x))
+        .map(|x| x.parse::<Modification>().unwrap())
         .rev()
         .collect::<Vec<Modification>>();
     // This CuboidUnion will account for all of the cubes covered
