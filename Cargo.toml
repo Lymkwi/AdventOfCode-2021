@@ -85,3 +85,6 @@ path = "day22"
 
 [dependencies.day23]
 path = "day23"
+
+[dependencies.day24]
+path = "day24"

@@ -17,7 +17,7 @@ Stars obtained :
 ⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐
 ⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐
 ⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐
-⭐⭐⭐⭐⭐⭐⚫⚫⚫⚫
+⭐⭐⭐⭐⭐⭐⭐⭐⚫⚫
 ```
 
 Run times (on a ThinkPad X230 with Intel i7-3520M) :
@@ -32,11 +32,11 @@ Run times (on a ThinkPad X230 with Intel i7-3520M) :
 | Part 1 |  589us |  3.3ms |  194us |  859us |  6.3ms |
 | Part 2 |  2.2ms |  125ms |  182us |  3.7ms |  321ms |
 |        |**Day 16**|**Day 17**|**Day 18**|**Day 19**|**Day 20**|
-| Part 1 |  109us |   10ms |  1.6ms |  18ms |  7.9ms |
-| Part 2 |  110us |   15ms |   29ms |  24ms |  414ms |
+| Part 1 |  109us |   10ms |  1.6ms |   18ms |  7.9ms |
+| Part 2 |  110us |   15ms |   29ms |   24ms |  414ms |
 |        |**Day 21**|**Day 22**|**Day 23**|**Day 24**|**Day 25**|
-| Part 1 |  3.0us |  792ms |  168ms |
-| Part 2 |   42ms |  838ms |  160ms |
+| Part 1 |  3.0us |  792ms |  168ms |  1.2ms |
+| Part 2 |   42ms |  838ms |  160ms |   79ms |
 
 In order to check those benchmarks, run `cargo bench` on the root crate.
 

@@ -50,4 +50,5 @@ mod test {
     result_tests!(day21, day21_one, day21_two, 21, 908091, 190897246590017);
     result_tests!(day22, day22_one, day22_two, 22, 596598, 1199121349148621);
     result_tests!(day23, day23_one, day23_two, 23, 14467, 48759);
+    result_tests!(day24, day24_one, day24_two, 24, 99298993199873, 73181221197111);
 }
