@@ -47,36 +47,33 @@ pub fn solve_part_one(data: &str) -> usize {
         }
     }
     let mut heap: BinaryHeap<Reverse<AmphipodPuzzleState>> = BinaryHeap::new();
-    let mut known: HashSet<AmphipodPuzzleState> = HashSet::new();
+    let mut known: HashSet<[usize; 23]> = HashSet::new();
     let orgstate: AmphipodPuzzleState = AmphipodPuzzleState {
         cost: 0,
         hallway,
         chambers,
         part_one: true
     };
-    let k = orgstate.clone();
     heap.push(Reverse(orgstate));
-    known.insert(k);
     while !heap.is_empty() {
         // Pop a state from the heap
         let Reverse(state) = heap.pop().unwrap();
+        let dc = state.state();
+        if known.contains(&dc) { continue; }
+        known.insert(dc);
         // Ok is this a winning state?
         assert!(state.is_valid());
         if state.is_winning() {
             return state.cost;
         }
         for new_state in state.next_states() {
-            if known.contains(&new_state) {
-                continue;
-            }
-            heap.push(Reverse(new_state.clone()));
-            known.insert(new_state);
+            heap.push(Reverse(new_state));
         }
     }
     panic!("I didn't find an exit");
 }
 
-#[derive(Clone, Copy, PartialEq, Eq, Debug, PartialOrd, Ord, Hash)]
+#[derive(Clone, Copy, PartialEq, Eq, Debug, PartialOrd, Ord)]
 enum Amphipod {
     Amber,
     Bronze,
@@ -106,7 +103,7 @@ impl Amphipod {
     }
 }
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Copy, Debug)]
 struct AmphipodPuzzleState {
     cost: usize,
     hallway: [Option<Amphipod>; 11],
@@ -157,6 +154,28 @@ fn can_i_go(org: usize, dst: usize, hallway: [Option<Amphipod>; 11]) -> bool {
 }
 
 impl AmphipodPuzzleState {
+    fn state(&self) -> [usize; 23] {
+        let mut k: [usize; 23] = [0; 23];
+        let mut i = 0;
+        for x in [0, 1, 3, 5, 7, 9, 10] {
+            k[i] = match self.hallway[x] {
+                Some(a) => a.room_no() + 1,
+                None => 0
+            };
+            i+=1;
+        }
+        for chamber in self.chambers {
+            for spot in chamber {
+                k[i] = match spot {
+                    Some((a,b)) => a.room_no() + if b { 5 } else { 1 },
+                    None => 0
+                };
+                i+=1;
+            }
+        }
+        k
+    }
+
     fn is_valid(&self) -> bool {
         // Assert the number of amphipods
         let h_count = self.hallway.iter().filter(|x| x.is_some()).count();
@@ -193,7 +212,7 @@ impl AmphipodPuzzleState {
                                 continue; 
                             }
                             // Move out
-                            let mut nstate = self.clone();
+                            let mut nstate = *self;
                             nstate.chambers[x][spot] = None;
                             nstate.hallway[np] = Some(ampod);
                             // How much did we move
@@ -229,7 +248,7 @@ impl AmphipodPuzzleState {
                         continue;
                     }
                 // Move back into my room
-                let mut nstate = self.clone();
+                let mut nstate = *self;
                 nstate.hallway[p] = None;
                 nstate.chambers[r][depth_busy-1] = Some((ampod, true));
                 let new_cost = ampod.cost() *
@@ -242,27 +261,16 @@ impl AmphipodPuzzleState {
     }
 }
 
-impl std::hash::Hash for AmphipodPuzzleState {
-    fn hash<H: std::hash::Hasher>(&self, state: &mut H) {
-        for p in [0, 1, 3, 5, 7, 9, 10] {
-            self.hallway[p].hash(state);
-        }
-        for k in 0..4 {
-            for y in 0..4 {
-                self.chambers[k][y].hash(state);
-            }
-        }
-    }
-}
-
 impl PartialEq for AmphipodPuzzleState {
     fn eq(&self, other: &Self) -> bool {
         self.cost == other.cost &&
-            (0..11).all(|p| self.hallway[p] == other.hallway[p]) &&
-            (0..4).all(|hn| {
-                self.chambers[hn][0] == other.chambers[hn][0] &&
-                    self.chambers[hn][1] == other.chambers[hn][1]
+        (0..11).all(|p| self.hallway[p] == other.hallway[p]) &&
+        (0..4).all(|hn| {
+            let depth = if self.part_one { 2 } else { 4 };
+            (0..depth).all(|pos| {
+                self.chambers[hn][pos] == other.chambers[hn][pos]
             })
+        })
     }
 }
 
@@ -276,17 +284,7 @@ impl PartialOrd for AmphipodPuzzleState {
 
 impl Ord for AmphipodPuzzleState {
     fn cmp(&self, other: &Self) -> Ordering {
-        self.cost.cmp(&other.cost) /*{
-            Ordering::Equal => {
-                match self.eq(other) {
-                    true => Ordering::Equal,
-                    // Greater instead of slower improves performance
-                    // By a factor of like 6, idk why
-                    false => Ordering::Greater
-                }
-            },
-            x => x
-        }*/
+        self.cost.cmp(&other.cost)
             .then_with(|| {
                 for x in [0, 1, 3, 5, 7, 9, 10] {
                     if self.hallway[x] != other.hallway[x] {
@@ -374,29 +372,26 @@ pub fn solve_part_two(data: &str) -> usize {
     chambers[3][1] = Some((Amphipod::Amber, false));
     chambers[3][2] = Some((Amphipod::Copper, false));
     let mut heap: BinaryHeap<Reverse<AmphipodPuzzleState>> = BinaryHeap::new();
-    let mut known: HashSet<AmphipodPuzzleState> = HashSet::new();
+    let mut known: HashSet<[usize; 23]> = HashSet::new();
     let orgstate: AmphipodPuzzleState = AmphipodPuzzleState {
         cost: 0,
         hallway,
         chambers,
         part_one: false
     };
-    heap.push(Reverse(orgstate.clone()));
-    known.insert(orgstate);
+    heap.push(Reverse(orgstate));
     while !heap.is_empty() {
         // Pop a state from the heap
         let Reverse(state) = heap.pop().unwrap();
+        if known.contains(&state.state()) { continue; }
+        known.insert(state.state());
         // Ok is this a winning state?
         assert!(state.is_valid());
         if state.is_winning() {
             return state.cost;
         }
         for new_state in state.next_states() {
-            if known.contains(&new_state) {
-                continue;
-            }
-            heap.push(Reverse(new_state.clone()));
-            known.insert(new_state);
+            heap.push(Reverse(new_state));
         }
     }
     panic!("I didn't find an exit");
