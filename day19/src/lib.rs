@@ -4,6 +4,7 @@ use std::collections::{HashMap, HashSet};
 use regex::Regex;
 
 type Coords = (isize, isize, isize);
+type Matrix = [[isize; 3]; 3];
 
 /// Solve Advent of Code day 19 part one
 ///
@@ -47,6 +48,7 @@ pub fn solve_part_one(data: &str) -> usize {
                         [0, 0, 0],
                         [0, 0, 0]
                     ],
+                    splines: reticulate(&beacs),
                     beacons: beacs
                 })
         })
@@ -62,25 +64,25 @@ pub fn solve_part_one(data: &str) -> usize {
     // Try and correlate them all to each other
     let mut stables = vec![0];
     let mut unstables = (1..vscans.len()).collect::<Vec<usize>>();
+    let mut uncorrelated: HashSet<(usize, usize)> = HashSet::new();
+    let mut finalized: Vec<Coords> = vscans[&0].beacons.clone();
     while !unstables.is_empty() {
         let i = unstables[0];
-        //println!("Picking {} from {:?}", i, unstables);
         for stable in &stables {
-            //println!("Trying to correlate {} and {}...", stable, i);
+            if uncorrelated.contains(&(*stable, i)) ||
+                uncorrelated.contains(&(i, *stable)) { continue; }
             let beac_stable = vscans.get(stable).unwrap().clone();
-            if beac_stable.correlate(vscans.get_mut(&i).unwrap()) {
-                // Rework this second guy
-                //println!("Successfully correlated {} and {}", stable, i);
-                //let scanner_mod: &mut Scanner = vscans.get_mut(&i).unwrap();
-                //println!("Location of {} is {:?} in absolute", i,
-                //         (scanner_mod.x, scanner_mod.y, scanner_mod.z));
+            let beac_rebased = vscans.get_mut(&i).unwrap();
+            if let Some((rot, tbt)) = beac_stable.correlate(beac_rebased) {
                 stables.push(i);
+                //println!("Node {} was determined", i);
                 unstables.remove(0);
-                //println!("Unstables left: {:?}", unstables);
+                // Rework this second guy
+                finalized.extend(beac_rebased.rebase(rot, tbt));
                 break;
             }
+            uncorrelated.insert((*stable, i));
         }
-        //println!("Trying to correlate someone else...");
         if !unstables.is_empty() && i == unstables[0] {
             unstables.push(i);
             unstables.remove(0);
@@ -94,25 +96,41 @@ pub fn solve_part_one(data: &str) -> usize {
     beacons.len()
 }
 
+fn reticulate(bcs: &[Coords]) -> HashSet<usize> {
+    let mut set = HashSet::new();
+    for i in 1..bcs.len() {
+        for j in 0..i {
+            set.insert((
+                sq(bcs[i].0 - bcs[j].0) +
+                sq(bcs[i].1 - bcs[j].1) +
+                sq(bcs[i].2 - bcs[j].2)
+            ).unsigned_abs());
+        }
+    }
+    set
+}
+
 #[derive(Clone)]
 struct Scanner {
     positioned: bool,
     x: isize,
     y: isize,
     z: isize,
-    rot: [[isize; 3]; 3], // Rotation matrix
-    beacons: Vec<Coords>
+    rot: Matrix, // Rotation matrix
+    beacons: Vec<Coords>,
+    splines: HashSet<usize>
 }
 
 impl Scanner {
-    //fn in_range(&self, x: isize, y: isize, z: isize) -> bool {
-        //(x - self.x).abs() < 1000 && (y - self.y).abs() < 1000 && (z - self.z).abs() < 1000
-    //}
-
-    fn correlate(&self, other: &mut Scanner) -> bool {
+    fn correlate(&self, other: &Scanner) -> Option<(Matrix, Coords)> {
+        // Do the splines say we can potentially merge ?
+        let resulting_set = self.splines.intersection(&other.splines).count();
+        if resulting_set < 20 {
+            return None;
+        }
         // One beacon at a time, try and map
-        for &head_anch in &self.beacons {
-            for &head_float in &other.beacons {
+        for &head_anch in &self.beacons[11..] {
+            for &head_float in &other.beacons[2..] {
                 // Map head_anch -> head_float
                 //println!("Trying to tie {:?} to {:?}...", head_anch, head_float);
                 // Pick a second pair
@@ -144,23 +162,26 @@ impl Scanner {
                                 mapped.push((att_tr_float, att_float));
                             }
                             if mapped.len() > 12 {
-                                // Do the transformations here
-                                other.positioned = true;
-                                other.rot = rot;
-                                other.beacons = other.beacons.iter()
-                                    .map(|&x| add(trans_between, mul(rot, x)))
-                                    .collect::<Vec<Coords>>();
-                                other.x = trans_between.0;
-                                other.y = trans_between.1;
-                                other.z = trans_between.2;
-                                return true;
+                                return Some((rot, trans_between));
                             }
                         }
                     }
                 }
             }
         }
-        false
+        None
+    }
+
+    fn rebase(&mut self, rot: Matrix, tbt: Coords) -> &[Coords] {
+        self.positioned = true;
+        self.rot = rot;
+        self.x = tbt.0;
+        self.y = tbt.1;
+        self.z = tbt.2;
+        self.beacons = self.beacons.iter()
+            .map(|&x| add(tbt, mul(rot, x)))
+            .collect::<Vec<Coords>>();
+        &self.beacons[..]
     }
 }
 
@@ -172,7 +193,7 @@ fn sub(a: Coords, b: Coords) -> Coords {
     (a.0 - b.0, a.1 - b.1, a.2 - b.2)
 }
 
-fn mul(rot: [[isize; 3]; 3], v: Coords) -> Coords {
+fn mul(rot: Matrix, v: Coords) -> Coords {
     (
         v.0 * rot[0][0] + v.1 * rot[0][1] + v.2 * rot[0][2],
         v.0 * rot[1][0] + v.1 * rot[1][1] + v.2 * rot[1][2],
@@ -180,7 +201,7 @@ fn mul(rot: [[isize; 3]; 3], v: Coords) -> Coords {
     )
 }
 
-fn induce_rotation(a: Coords, b: Coords) -> [[isize; 3]; 3] {
+fn induce_rotation(a: Coords, b: Coords) -> Matrix {
     // So
     if a.0.abs() == a.1.abs() || a.1.abs() == a.2.abs() || a.0.abs() == a.2.abs() { // No, I can't guess two numbers at once, ffs
         return [[0; 3]; 3]; }
@@ -289,6 +310,7 @@ pub fn solve_part_two(data: &str) -> isize {
                         [0, 0, 0],
                         [0, 0, 0]
                     ],
+                    splines: reticulate(&beacs),
                     beacons: beacs
                 })
         })
@@ -307,24 +329,18 @@ pub fn solve_part_two(data: &str) -> isize {
     let mut beacon_pos: Vec<Coords> = Vec::new();
     while !unstables.is_empty() {
         let i = unstables[0];
-        //println!("Picking {} from {:?}", i, unstables);
         for stable in &stables {
-            //println!("Trying to correlate {} and {}...", stable, i);
             let beac_stable = vscans.get(stable).unwrap().clone();
-            if beac_stable.correlate(vscans.get_mut(&i).unwrap()) {
-                // Rework this second guy
-                //println!("Successfully correlated {} and {}", stable, i);
-                let scanner_found: &Scanner = vscans.get(&i).unwrap();
-                //println!("Location of {} is {:?} in absolute", i,
-                //         (scanner_mod.x, scanner_mod.y, scanner_mod.z));
+            let beac_rebased = vscans.get_mut(&i).unwrap();
+            if let Some((rot, tbt)) = beac_stable.correlate(beac_rebased) {
                 stables.push(i);
                 unstables.remove(0);
-                //println!("Unstables left: {:?}", unstables);
-                beacon_pos.push((scanner_found.x, scanner_found.y, scanner_found.z));
+                beac_rebased.rebase(rot, tbt);
+                // Rework this second guy
+                beacon_pos.push((beac_rebased.x, beac_rebased.y, beac_rebased.z));
                 break;
             }
         }
-        //println!("Trying to correlate someone else...");
         if !unstables.is_empty() && i == unstables[0] {
             unstables.push(i);
             unstables.remove(0);
