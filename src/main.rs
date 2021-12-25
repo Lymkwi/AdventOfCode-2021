@@ -51,4 +51,5 @@ mod test {
     result_tests!(day22, day22_one, day22_two, 22, 596598, 1199121349148621);
     result_tests!(day23, day23_one, day23_two, 23, 14467, 48759);
     result_tests!(day24, day24_one, day24_two, 24, 99298993199873, 73181221197111);
+    result_tests!(day25, day25_one, day25_two, 25, 453, "Merry Christmas!");
 }

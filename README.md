@@ -17,7 +17,7 @@ Stars obtained :
 ⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐
 ⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐
 ⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐
-⭐⭐⭐⭐⭐⭐⭐⭐⚫⚫
+⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐
 ```
 
 Run times (on a ThinkPad X230 with Intel i7-3520M) :
@@ -35,8 +35,8 @@ Run times (on a ThinkPad X230 with Intel i7-3520M) :
 | Part 1 |  109us |   10ms |  1.6ms |   18ms |  7.9ms |
 | Part 2 |  110us |   15ms |   29ms |   24ms |  414ms |
 |        |**Day 21**|**Day 22**|**Day 23**|**Day 24**|**Day 25**|
-| Part 1 |  3.0us |  792ms |  168ms |  1.2ms |
-| Part 2 |   42ms |  838ms |  160ms |   79ms |
+| Part 1 |  3.0us |  792ms |  168ms |  1.2ms |  397ms |
+| Part 2 |   42ms |  838ms |  160ms |   79ms | :deer: |
 
 In order to check those benchmarks, run `cargo bench` on the root crate.
 
@@ -60,8 +60,9 @@ Every sub-level day crate contains tests for the examples given on that day. You
 
 ## The common crate
 
-The `common` crate defines methods used by multiple day crates :
+The `common` crate defines methods and macros used by multiple day crates :
  - `read_data` : reads the data from the file into a `String`
+ - `tests!` : a macro designed to write quick unit tests based on an input and the expected output
 
 ## Top-level tests and benchmarks
 
