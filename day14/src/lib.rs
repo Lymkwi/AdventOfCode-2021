@@ -72,15 +72,12 @@ pub fn solve_at_depth(data: &str, depth: usize) -> usize {
         .as_slice()
         .windows(2)
         .for_each(|v| {
-            let res =
-                if let Some(d) = memo.get(&(depth, v[0], v[1])) {
-                    d.clone()
-                } else {
-                    let d = compute_depth(depth, v[0], v[1], &rules, &mut memo);
-                    memo.insert((depth, v[0], v[1]), d.clone());
-                    d
-                };
-            for (key, val) in res {
+            if !memo.contains_key(&(depth, v[0], v[1])) {
+                let d = compute_depth(depth, v[0], v[1], &rules, &mut memo);
+                memo.insert((depth, v[0], v[1]), d);
+            }
+            let res = memo.get(&(depth, v[0], v[1])).unwrap();
+            for (&key, val) in res {
                 *answers.entry(key).or_insert(0) += val;
             }
         });

@@ -202,9 +202,8 @@ fn scan_two(x_zone: (isize, isize), y_zone: (isize, isize)) -> isize {
     let mut count = 0;
     for y in (y_zone.0 ..= exp_y).rev() {
         for x in 0 ..=(x_zone.1+1) {
-            match big_shot(x, y, x_zone, y_zone) {
-                Shot::Hit => { count += 1; },
-                _ => { }
+            if big_shot(x, y, x_zone, y_zone) == Shot::Hit {
+                count += 1;
             }
         }
     }
