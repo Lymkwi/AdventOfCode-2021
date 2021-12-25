@@ -24,24 +24,23 @@ pub fn read_data(filepath: &str) -> std::io::Result<String> {
 
 #[macro_export]
 macro_rules! test {
-    ($fn:ident, $part:literal, $exp:literal, $data:literal) => {
+    ($fn:ident, 1, $exp:expr, $data:literal) => {
         #[test]
         fn $fn() {
             let data = $data;
             // The expected definitions are in separate blocks
             // So that the compiler can infer the right type from
             // The right function without us having to tell it
-            match $part {
-                1 => {
-                    let expected = $exp;
-                    assert_eq!(expected, solve_part_one(&data))
-                },
-                2 => {
-                    let expected = $exp;
-                    assert_eq!(expected, solve_part_two(&data))
-                },
-                _ => panic!("Wrong day part '{}'", $part)
-            }
+            let expected = $exp;
+            assert_eq!(expected, solve_part_one(&data))
+        }
+    };
+    ($fn:ident, 2, $exp:expr, $data:literal) => {
+        #[test]
+        fn $fn() {
+            let data = $data;
+            let expected = $exp;
+            assert_eq!(expected, solve_part_two(&data));
         }
     }
 }
